@@ -232,7 +232,7 @@ export default function Page() {
               <h2 className="text-4xl md:text-5xl font-serif tracking-tight leading-[0.98]">Rooted in faith.<br /><span className="text-[var(--maroon)] italic">Open to all.</span></h2>
             </div>
             <div className="space-y-6">
-              <p className="text-[var(--muted-foreground)] text-[15px]">Rilbong Sanatan Hindu Dharma Sabha is a not-for-profit community built by neighbours, for neighbours. Since 1985, we have gathered to celebrate our faith, preserve our cultural heritage, and extend a helping hand wherever it is needed.</p>
+              <p className="text-[var(--muted-foreground)] text-[15px]">Rilbong Sanatan Hindu Dharma Sabha is a not-for-profit community built by neighbours, for neighbours. Since 1927, we have gathered to celebrate our faith, preserve our cultural heritage, and extend a helping hand wherever it is needed.</p>
               <div className="flex gap-8 pt-6 border-t border-[var(--border)]">
                 <div className="flex flex-col"><strong className="text-[var(--maroon)] font-serif text-3xl">3</strong><span className="text-[var(--muted-foreground)] text-[11px] mt-1">Weekly rituals held</span></div>
                 <div className="flex flex-col"><strong className="text-[var(--maroon)] font-serif text-3xl">12</strong><span className="text-[var(--muted-foreground)] text-[11px] mt-1">Cultural events / year</span></div>
