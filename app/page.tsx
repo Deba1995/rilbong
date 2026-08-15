@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import {
-  ArrowUpRight, CalendarDays, Camera, Check, Clock, Flame, Footprints,
+  ArrowUpRight, CalendarDays, Camera, Check, ChevronDown, Clock, Flame, Footprints,
   Globe, Mail, MapPin, Menu, Phone, Play, Salad, ShieldCheck, Sparkles, Sun, Trophy, Users, X,
 } from 'lucide-react'
 
@@ -111,7 +111,7 @@ export default function Page() {
         <div className="container mx-auto px-6 max-w-[1180px] z-10 relative flex flex-col items-center text-center text-[#fffaf3] py-24">
           <Reveal>
             <p className="flex items-center justify-center gap-3 text-[var(--gold)] text-[11px] tracking-[0.2em] uppercase font-bold">
-              <span className="w-8 h-px bg-[var(--gold)]" /> Serving since 1985 <span className="w-8 h-px bg-[var(--gold)]" />
+              <span className="w-8 h-px bg-[var(--gold)]" /> Serving since 1927 <span className="w-8 h-px bg-[var(--gold)]" />
             </p>
           </Reveal>
           <Reveal delay={80}>
@@ -396,7 +396,7 @@ export default function Page() {
                     <div>
                       <span className="text-[var(--saffron)] text-[10px] font-bold tracking-[0.15em] uppercase block mb-1">Visit Us</span>
                       <address className="not-italic font-serif text-xl text-[var(--ink)] leading-snug">
-                        Near Rilbong Maidan,<br />Shillong, Meghalaya - 793003
+                        Rilbong Maidan,<br />Shillong, Meghalaya - 793004
                       </address>
                     </div>
                   </div>
@@ -407,7 +407,7 @@ export default function Page() {
                     </div>
                     <div>
                       <span className="text-[var(--saffron)] text-[10px] font-bold tracking-[0.15em] uppercase block mb-1">Call Us</span>
-                      <a href="tel:+919876543210" className="font-serif text-xl text-[var(--ink)] hover:text-[var(--maroon)] transition-colors">+91 98765 43210</a>
+                      <a href="tel:+919876543210" className="font-serif text-xl text-[var(--ink)] hover:text-[var(--maroon)] transition-colors">+91 94361 03190</a>
                     </div>
                   </div>
 
@@ -417,7 +417,7 @@ export default function Page() {
                     </div>
                     <div>
                       <span className="text-[var(--saffron)] text-[10px] font-bold tracking-[0.15em] uppercase block mb-1">Email Us</span>
-                      <a href="mailto:contact@rilbongsanatanhindudharmasabha.org" className="font-serif text-lg text-[var(--ink)] hover:text-[var(--maroon)] transition-colors break-all">contact@rilbong<wbr/>sanatanhindu<wbr/>dharmasabha.org</a>
+                      <a href="mailto:contact@rilbongsanatanhindudharmasabha.org" className="font-serif text-lg text-[var(--ink)] hover:text-[var(--maroon)] transition-colors break-all">rilbongsanatanhindudharmasabha@<wbr/>gmail.com</a>
                     </div>
                   </div>
                 </div>
@@ -428,23 +428,27 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Policies */}
-      <section className="pb-24 bg-[var(--cream)]">
+      {/* Policies Section - Vertical Accordion */}
+      <section className="pb-24 bg-[var(--cream)]" id="policies">
         <div className="container mx-auto px-6 max-w-[1180px]">
-          <Reveal>
-            <div className="pt-12 border-t border-[var(--border)] grid grid-cols-1 md:grid-cols-3 gap-12">
-              {[
-                ['Terms & Conditions', 'We ask every participant to register honestly, follow event guidelines, and conduct themselves with respect. The Sabha reserves the right to modify event details when necessary. One entry is allowed per category per person. These terms are governed by the laws of India.'],
-                ['Privacy Policy', 'We collect information such as name, email, phone, address, age, and gender only through registration forms for event coordination. Personal and contact details are handled securely and are never stored for unsolicited purposes.'],
-                ['Refund Policy', 'Entry fees are non-refundable once paid. If an event is cancelled or postponed by the organizers, a full refund may be requested within 7 working days by contacting us. Refunds are processed after verification.'],
-              ].map(([title, copy], index) => (
-                <div key={title}>
-                  <h4 className="font-serif text-lg text-[var(--ink)] mb-3">{title}</h4>
-                  <p className="text-[var(--muted-foreground)] text-xs leading-relaxed text-justify">{copy}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
+          <div className="max-w-3xl mx-auto space-y-4">
+            {[
+              ['Terms & Conditions', 'By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. Rilbong Sanatan Hindu Dharma Sabha reserves the right to modify event details, timings, and venues due to unforeseen circumstances. Registration for events constitutes a binding agreement. You confirm that all information provided during registration is accurate. Unauthorized use of this website may give rise to a claim for damages. Any dispute arising out of use of the website is subject to the regulatory jurisdiction of the courts of Shillong, Meghalaya, India.'],
+              ['Privacy Policy', 'Rilbong Sanatan Hindu Dharma Sabha is committed to protecting your privacy. We collect personal information (such as name, email, phone number, and address) solely for event registration, communication, and logistical coordination. We do not sell, trade, or rent your personal information to third parties. Financial transactions are processed securely through our payment gateway partner, Razorpay. We do not store your credit/debit card details or banking credentials on our servers. By using our website and registering for events, you consent to our data collection practices as outlined.'],
+              ['Refund Policy', 'All event registration fees (including the Food Festival and Marathon) are strictly non-refundable and non-transferable under normal circumstances. If a participant fails to attend, no refund will be issued. In the rare event that The Sabha is forced to cancel or indefinitely postpone an event, registered participants will be notified via email, and full refunds will be initiated automatically. Once a refund is processed by our team, please allow 5 to 7 business days for the amount to reflect in your original payment method.'],
+              ['Shipping & Delivery', 'Rilbong Sanatan Hindu Dharma Sabha handles event registrations digitally. No physical tickets or goods are shipped. Upon successful completion of your payment, a payment confirmation receipt will be automatically delivered to your registered email address. Please present this payment confirmation (digital or printed) at the venue on the day of the event as proof of registration.']
+            ].map(([title, copy], index) => (
+              <Reveal key={title} delay={index * 80}>
+                <details className="border-t border-[var(--border)] group">
+                  <summary className="flex items-center justify-between py-5 cursor-pointer list-none font-serif text-xl marker:hidden text-[var(--ink)]">
+                    {title}
+                    <ChevronDown size={18} className="group-open:rotate-180 transition-transform duration-300 text-[var(--maroon)]" />
+                  </summary>
+                  <p className="pb-6 text-[var(--muted-foreground)] text-sm leading-relaxed text-justify">{copy}</p>
+                </details>
+              </Reveal>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -462,9 +466,17 @@ export default function Page() {
             <a href="#" className="grid place-items-center w-10 h-10 border border-white/20 rounded-full hover:bg-[var(--maroon)] hover:-translate-y-1 transition-all"><Play size={18} /></a>
           </div> */}
         </div>
-        <div className="container mx-auto px-6 max-w-[1180px] flex flex-col md:flex-row justify-between border-t border-white/10 py-5 text-white/50 text-[10px] tracking-widest uppercase">
-          <span>© 2026 Rilbong Sanatan Hindu Dharma Sabha</span>
-          <span>Built with love</span>
+        <div className="container mx-auto px-6 max-w-[1180px] flex flex-col md:flex-row justify-between items-center border-t border-white/10 py-5 text-white/50 text-[10px] tracking-widest uppercase gap-6">
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <a href="#policies" className="hover:text-white transition-colors">Terms & Conditions</a>
+            <a href="#policies" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="#policies" className="hover:text-white transition-colors">Refund Policy</a>
+            <a href="#policies" className="hover:text-white transition-colors">Shipping Details</a>
+          </div>
+          <div className="flex flex-wrap gap-4 text-center">
+            <span>© 2026 Rilbong Sanatan Hindu Dharma Sabha</span>
+            <span>Built with love</span>
+          </div>
         </div>
       </footer>
     </main>
