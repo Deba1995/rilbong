@@ -225,6 +225,7 @@ export default function Page() {
           <div className="mt-16 space-y-12">
             
             {/* Event 1: Food Festival */}
+            {/* Event 1: Food Festival */}
             <Reveal delay={100}>
               <article className="grid md:grid-cols-12 overflow-hidden bg-[var(--card)] border border-[#7a1c1c]/15 rounded-3xl shadow-lg hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group">
                 <div className="md:col-span-5 relative grid place-items-center min-h-[350px] overflow-hidden bg-gradient-to-br from-[var(--maroon)] to-[#a3312c] bg-pattern-dots">
@@ -243,7 +244,14 @@ export default function Page() {
                   </div>
                   
                   <div className="mt-8 flex items-center gap-4">
-                    <button className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--maroon)] text-[#fffaf3] font-bold text-sm rounded-full hover:bg-[var(--deep-maroon)] hover:-translate-y-0.5 transition-all">Register Now <ArrowUpRight size={16} /></button>
+                    <a 
+                      href="https://forms.gle/eMKTEGr33btyce6CA" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--maroon)] text-[#fffaf3] font-bold text-sm rounded-full hover:bg-[var(--deep-maroon)] hover:-translate-y-0.5 transition-all"
+                    >
+                      Register Now <ArrowUpRight size={16} />
+                    </a>
                   </div>
                 </div>
               </article>
