@@ -194,11 +194,15 @@ export default function Page() {
         {/* Part 2: The Story (Fixed Overlapping Cards Layout) */}
         <div className="container mx-auto px-6 max-w-[1180px] grid md:grid-cols-2 gap-16 items-center">
           
-          <Reveal className="relative grid place-items-center min-h-[500px] w-full">
-            <div className="relative w-full max-w-[460px] h-[460px] md:h-[480px]">
+          <Reveal className="relative grid place-items-center w-full py-6 md:py-0">
+            {/* 
+              On mobile: displays as a clean, stacked vertical column with spacing.
+              On desktop (md+): switches to an absolute overlapping layout with a fixed height.
+            */}
+            <div className="relative w-full max-w-[420px] flex flex-col md:block md:h-[460px]">
               
               {/* Top Left Card - Maroon */}
-              <div className="absolute top-0 left-0 w-[260px] md:w-[280px] p-8 bg-[var(--maroon)] text-[#fffaf3] rounded-3xl shadow-xl z-20 hover:-translate-y-2 transition-transform duration-500">
+              <div className="w-full md:absolute md:top-0 md:left-0 md:w-[270px] p-8 bg-[var(--maroon)] text-[#fffaf3] rounded-3xl shadow-xl z-20 mb-6 md:mb-0 hover:-translate-y-2 transition-transform duration-500">
                 <div className="w-12 h-12 bg-[#fffaf3]/10 rounded-full flex items-center justify-center mb-5">
                   <Users size={24} />
                 </div>
@@ -207,7 +211,7 @@ export default function Page() {
               </div>
               
               {/* Bottom Right Card - Gold */}
-              <div className="absolute bottom-0 right-0 w-[260px] md:w-[280px] p-8 bg-[var(--gold)] text-[var(--ink)] rounded-3xl shadow-2xl z-30 hover:-translate-y-2 transition-transform duration-500">
+              <div className="w-full md:absolute md:bottom-0 md:right-0 md:w-[270px] p-8 bg-[var(--gold)] text-[var(--ink)] rounded-3xl shadow-2xl z-30 hover:-translate-y-2 transition-transform duration-500">
                 <div className="w-12 h-12 bg-[var(--ink)]/10 rounded-full flex items-center justify-center mb-5">
                   <Heart size={24} />
                 </div>
@@ -215,7 +219,8 @@ export default function Page() {
                 <p className="text-[var(--ink)]/80 text-sm leading-relaxed">Extending a helping hand through dedicated charitable drives and welfare.</p>
               </div>
 
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 border border-dashed border-[var(--gold)]/50 rounded-full z-10 pointer-events-none" />
+              {/* Decorative Background Element (Desktop only) */}
+              <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 border border-dashed border-[var(--gold)]/50 rounded-full z-10 pointer-events-none" />
             </div>
           </Reveal>
 
