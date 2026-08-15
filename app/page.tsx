@@ -268,7 +268,7 @@ export default function Page() {
         </div>
 
         {/* Part 3: Committee */}
-        <div className="container mx-auto px-6 max-w-[1180px] mt-12 pt-24 border-t border-[var(--border)]">
+        {/* <div className="container mx-auto px-6 max-w-[1180px] mt-12 pt-24 border-t border-[var(--border)]">
           <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
             <Reveal>
               <SectionHeading 
@@ -302,7 +302,7 @@ export default function Page() {
               </Reveal>
             ))}
           </div>
-        </div>
+        </div> */}
 
       </section>
 
@@ -396,7 +396,7 @@ export default function Page() {
                     <div>
                       <span className="text-[var(--saffron)] text-[10px] font-bold tracking-[0.15em] uppercase block mb-1">Visit Us</span>
                       <address className="not-italic font-serif text-xl text-[var(--ink)] leading-snug">
-                        Near Rilbong Market,<br />Shillong, Meghalaya - 793003
+                        Near Rilbong Maidan,<br />Shillong, Meghalaya - 793003
                       </address>
                     </div>
                   </div>
