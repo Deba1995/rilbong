@@ -20,16 +20,6 @@ const committee = [
   { name: 'Kavita Roy', role: 'Cultural Coordinator', initials: 'KR' },
 ]
 
-/* 
-  COMMENTED OUT: Aarti and Puja timings to keep the focus on general community events
-  const timings = [
-    { icon: Sun, label: 'Morning Aarti', value: '6:30 – 7:15 AM' },
-    { icon: Flame, label: 'Sandhya Aarti', value: '6:00 – 6:45 PM' },
-    { icon: Clock, label: 'Darshan Hours', value: '5:30 AM – 9:00 PM' },
-    { icon: CalendarDays, label: 'Weekly Puja', value: 'Every Tuesday & Sunday' },
-  ]
-*/
-
 function Reveal({ children, className = '', delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
   return <div className={`reveal ${className}`} style={{ '--delay': `${delay}ms` } as React.CSSProperties}>{children}</div>
 }
@@ -77,8 +67,8 @@ export default function Page() {
           <a className="flex items-center gap-3 group" href="#home" onClick={closeMenu}>
             <span className="grid place-items-center w-10 h-10 border-[1.5px] border-[var(--gold)] rounded-full text-[var(--gold)] text-xl bg-[#e9b94f]/10 font-serif group-hover:bg-[#e9b94f]/20 transition-colors">ॐ</span>
             <span className="flex flex-col leading-tight">
-              <strong className="text-[var(--gold)] font-serif text-lg tracking-tight">Rilbong</strong>
-              <small className="text-[8px] uppercase tracking-widest text-[#fffaf3]/70">Sanatan Hindu Dharma Sabha</small>
+              <strong className="text-[var(--gold)] font-serif text-lg tracking-tight">Rilbong Sanatan Hindu Dharma Sabha</strong>
+              <small className="text-[8px] uppercase tracking-widest text-[#fffaf3]/70">Community Welfare & Tradition</small>
             </span>
           </a>
           
@@ -100,34 +90,29 @@ export default function Page() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex flex-col items-center justify-center overflow-hidden" id="home">
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="/mandap.jpeg" 
-            alt="Rilbong Community Gathering" 
-            className="w-full h-full object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[var(--deep-maroon)] via-[var(--maroon)]/80 to-transparent mix-blend-multiply" />
-          <div className="absolute inset-0 bg-black/40" /> 
-        </div>
+      <section className="relative min-h-[85vh] flex flex-col items-center justify-center bg-gradient-to-b from-[#4a1210] via-[#7a1c1c] to-[#341410] text-[#fffaf3] overflow-hidden px-6 py-24" id="home">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,_rgba(230,177,63,0.12)_0%,_transparent_70%)] pointer-events-none" />
         
-        <div className="container mx-auto px-6 max-w-[1180px] z-10 relative flex flex-col items-center text-center text-[#fffaf3] py-24">
-          <Reveal>
-            <p className="flex items-center justify-center gap-3 text-[var(--gold)] text-[11px] tracking-[0.2em] uppercase font-bold">
-              <span className="w-8 h-px bg-[var(--gold)]" /> Serving since 1927 <span className="w-8 h-px bg-[var(--gold)]" />
-            </p>
-          </Reveal>
+        <div className="container mx-auto max-w-[1180px] z-10 relative flex flex-col items-center text-center">
+          {/* <Reveal>
+            <div className="w-16 h-16 border-2 border-[var(--gold)] rounded-full flex items-center justify-center text-[var(--gold)] font-serif text-3xl mb-8 shadow-xl bg-[var(--gold)]/5">
+              ॐ
+            </div>
+          </Reveal> */}
+          
           <Reveal delay={80}>
-            <p className="mt-8 text-[var(--gold)] text-[11px] font-bold tracking-[0.28em] drop-shadow-md">RILBONG / SHILLONG</p>
-            <h1 className="mt-4 text-6xl md:text-8xl font-serif tracking-tighter leading-[0.9] drop-shadow-2xl">
-              <em className="text-[var(--gold)] italic">Rilbong</em><br />in celebration.
+            <p className="text-[var(--gold)] text-xs font-bold tracking-[0.3em] uppercase mb-4">Rilbong, Shillong • Established 1927</p>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif tracking-tight leading-[1.1] max-w-4xl">
+              Rilbong Sanatan Hindu<br /><em className="text-[var(--gold)] italic">Dharma Sabha</em>
             </h1>
           </Reveal>
+          
           <Reveal delay={160}>
-            <p className="mt-6 text-[#fffaf3]/90 text-lg md:text-xl max-w-2xl mx-auto font-medium drop-shadow-lg">
-              A dedicated community organization nurturing cultural heritage, compassion, and the joyful spirit of Rilbong.
+            <p className="mt-6 text-[#fffaf3]/90 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed">
+              Nurturing cultural heritage, community service, and the timeless values of unity and compassion in Rilbong.
             </p>
           </Reveal>
+          
           <Reveal delay={240}>
             <div className="mt-10 flex flex-wrap justify-center gap-4">
               <a className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-br from-[var(--gold)] to-[var(--marigold)] text-[var(--ink)] font-bold text-sm rounded-full hover:-translate-y-1 hover:shadow-[0_10px_40px_rgba(230,177,63,0.3)] transition-all" href="#events">
@@ -139,18 +124,18 @@ export default function Page() {
             </div>
           </Reveal>
           
-          <Reveal delay={300} className="w-full mt-24 pt-10 border-t border-white/20">
+          <Reveal delay={300} className="w-full mt-24 pt-10 border-t border-white/20 max-w-3xl">
             <div className="flex flex-wrap justify-center gap-12 md:gap-24">
               <div className="flex flex-col">
-                <strong className="text-[var(--gold)] font-serif text-4xl md:text-5xl font-normal drop-shadow-md">40+</strong>
+                <strong className="text-[var(--gold)] font-serif text-4xl md:text-5xl font-normal">40+</strong>
                 <span className="text-[#fffaf3]/80 text-[10px] tracking-widest uppercase mt-3 font-bold">Years of service</span>
               </div>
               <div className="flex flex-col">
-                <strong className="text-[var(--gold)] font-serif text-4xl md:text-5xl font-normal drop-shadow-md">1000+</strong>
+                <strong className="text-[var(--gold)] font-serif text-4xl md:text-5xl font-normal">1000+</strong>
                 <span className="text-[#fffaf3]/80 text-[10px] tracking-widest uppercase mt-3 font-bold">Community members</span>
               </div>
               <div className="flex flex-col">
-                <strong className="text-[var(--gold)] font-serif text-4xl md:text-5xl font-normal drop-shadow-md">2</strong>
+                <strong className="text-[var(--gold)] font-serif text-4xl md:text-5xl font-normal">2</strong>
                 <span className="text-[#fffaf3]/80 text-[10px] tracking-widest uppercase mt-3 font-bold">Major events this season</span>
               </div>
             </div>
@@ -174,14 +159,14 @@ export default function Page() {
         {/* Part 1: Intro */}
         <div className="container mx-auto px-6 max-w-[1180px] grid lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-3 flex items-center gap-3 text-[var(--muted-foreground)] text-[10px] tracking-widest uppercase">
-            <span className="text-[var(--saffron)] font-serif text-2xl">01</span><span>Our community</span>
+            <span className="text-[var(--saffron)] font-serif text-2xl">01</span><span>Our organization</span>
           </div>
           <div className="lg:col-span-9 grid md:grid-cols-2 gap-12">
             <div>
-              <h2 className="text-4xl md:text-5xl font-serif tracking-tight leading-[0.98]">Rooted in tradition.<br /><span className="text-[var(--maroon)] italic">Open to all.</span></h2>
+              <h2 className="text-4xl md:text-5xl font-serif tracking-tight leading-[0.98]">Rooted in Rilbong.<br /><span className="text-[var(--maroon)] italic">Open to all.</span></h2>
             </div>
             <div className="space-y-6">
-              <p className="text-[var(--muted-foreground)] text-[15px] leading-relaxed">Rilbong Sanatan Hindu Dharma Sabha is a not-for-profit organization built by neighbours, for neighbours. We gather to celebrate our shared heritage, foster unity in Shillong, and extend a helping hand to anyone in need through continuous charitable work.</p>
+              <p className="text-[var(--muted-foreground)] text-[15px] leading-relaxed">Rilbong Sanatan Hindu Dharma Sabha is a not-for-profit organization built by neighbours, for neighbours. We gather to celebrate our shared heritage, foster unity in Rilbong, Shillong, and extend a helping hand to anyone in need through continuous charitable work.</p>
               
               <div className="flex gap-8 pt-6 border-t border-[var(--border)]">
                 <div className="flex flex-col"><strong className="text-[var(--maroon)] font-serif text-3xl">10+</strong><span className="text-[var(--muted-foreground)] text-[11px] mt-1">Welfare drives / year</span></div>
@@ -191,27 +176,23 @@ export default function Page() {
           </div>
         </div>
 
-        {/* Part 2: The Story (Fixed Overlapping Cards Layout) */}
+        {/* Part 2: The Story (Responsive Overlapping Cards) */}
         <div className="container mx-auto px-6 max-w-[1180px] grid md:grid-cols-2 gap-16 items-center">
           
-          <Reveal className="relative grid place-items-center w-full py-6 md:py-0">
-            {/* 
-              On mobile: displays as a clean, stacked vertical column with spacing.
-              On desktop (md+): switches to an absolute overlapping layout with a fixed height.
-            */}
-            <div className="relative w-full max-w-[420px] flex flex-col md:block md:h-[460px]">
+          <Reveal className="relative grid place-items-center min-h-[500px] w-full">
+            <div className="relative w-full max-w-[460px] h-[460px] md:h-[480px]">
               
               {/* Top Left Card - Maroon */}
-              <div className="w-full md:absolute md:top-0 md:left-0 md:w-[270px] p-8 bg-[var(--maroon)] text-[#fffaf3] rounded-3xl shadow-xl z-20 mb-6 md:mb-0 hover:-translate-y-2 transition-transform duration-500">
+              <div className="w-full md:absolute md:top-0 md:left-0 md:w-[280px] p-8 bg-[var(--maroon)] text-[#fffaf3] rounded-3xl shadow-xl z-20 mb-6 md:mb-0 hover:-translate-y-2 transition-transform duration-500">
                 <div className="w-12 h-12 bg-[#fffaf3]/10 rounded-full flex items-center justify-center mb-5">
                   <Users size={24} />
                 </div>
                 <h4 className="font-serif text-3xl mb-3 tracking-tight">Unity</h4>
-                <p className="text-[#fffaf3]/80 text-sm leading-relaxed">Connecting the Shillong community across all ages and walks of life.</p>
+                <p className="text-[#fffaf3]/80 text-sm leading-relaxed">Connecting the Rilbong and Shillong community across all ages and walks of life.</p>
               </div>
               
               {/* Bottom Right Card - Gold */}
-              <div className="w-full md:absolute md:bottom-0 md:right-0 md:w-[270px] p-8 bg-[var(--gold)] text-[var(--ink)] rounded-3xl shadow-2xl z-30 hover:-translate-y-2 transition-transform duration-500">
+              <div className="w-full md:absolute md:bottom-0 md:right-0 md:w-[280px] p-8 bg-[var(--gold)] text-[var(--ink)] rounded-3xl shadow-2xl z-30 hover:-translate-y-2 transition-transform duration-500">
                 <div className="w-12 h-12 bg-[var(--ink)]/10 rounded-full flex items-center justify-center mb-5">
                   <Heart size={24} />
                 </div>
@@ -219,14 +200,13 @@ export default function Page() {
                 <p className="text-[var(--ink)]/80 text-sm leading-relaxed">Extending a helping hand through dedicated charitable drives and welfare.</p>
               </div>
 
-              {/* Decorative Background Element (Desktop only) */}
               <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 border border-dashed border-[var(--gold)]/50 rounded-full z-10 pointer-events-none" />
             </div>
           </Reveal>
 
           <Reveal delay={100} className="space-y-6">
             <h2 className="text-4xl md:text-5xl font-serif tracking-tight leading-[0.98]">A tradition of care.</h2>
-            <p className="text-[var(--muted-foreground)] text-[15px] max-w-md leading-relaxed">What began as a small gathering of local families has grown into a shared space for generations. Our Sabha was founded by members who believed that community service, cultural preservation, and neighborhood unity are most meaningful when experienced together.</p>
+            <p className="text-[var(--muted-foreground)] text-[15px] max-w-md leading-relaxed">What began as a small gathering of local families in Rilbong has grown into a shared space for generations. Our Sabha was founded by members who believed that community service, cultural preservation, and neighborhood unity are most meaningful when experienced together.</p>
             <div className="grid gap-4 mt-8 pt-8 border-t border-[var(--border)]">
               <div className="flex items-center gap-3 text-[var(--maroon)] text-sm"><span className="p-1 rounded-full bg-[var(--saffron)] text-[#fffaf3]"><Check size={14} /></span> Fostering community welfare and unity</div>
               <div className="flex items-center gap-3 text-[var(--maroon)] text-sm"><span className="p-1 rounded-full bg-[var(--saffron)] text-[#fffaf3]"><Check size={14} /></span> Supporting our neighbours in need</div>
@@ -254,11 +234,11 @@ export default function Page() {
                 <div className="md:col-span-7 p-8 md:p-14 flex flex-col justify-center">
                   <span className="text-[var(--saffron)] text-[10px] font-bold tracking-[0.13em] uppercase">3 October 2026</span>
                   <h3 className="mt-4 text-4xl md:text-5xl font-serif tracking-tight leading-[0.95]">Rilbong Community<br />Food Festival 2026</h3>
-                  <p className="mt-4 text-[var(--muted-foreground)] text-base max-w-md">Celebrate the abundance of home cooking talent in our community. A joyful table of beloved recipes, shared stories, and the men and women who make Rilbong taste like home.</p>
+                  <p className="mt-4 text-[var(--muted-foreground)] text-base max-w-md">Celebrate the abundance of home cooking talent in our community. A joyful table of beloved recipes, shared stories, and neighbours coming together in Rilbong.</p>
                   
                   <div className="flex flex-col gap-3 mt-6 pt-6 border-t border-[var(--border)] text-[var(--muted-foreground)] text-xs">
                     <span className="flex items-center gap-2"><CalendarDays size={16} className="text-[var(--maroon)]" /> 3rd Oct, 9:00 AM - 4:00 PM</span>
-                    <span className="flex items-center gap-2"><MapPin size={16} className="text-[var(--maroon)]" /> Rilbong Maidan</span>
+                    <span className="flex items-center gap-2"><MapPin size={16} className="text-[var(--maroon)]" /> Rilbong Maidan, Shillong</span>
                     <span className="flex items-center gap-2"><Trophy size={16} className="text-[var(--maroon)]" /> Entry Fee: ₹500</span>
                   </div>
                   
@@ -283,7 +263,7 @@ export default function Page() {
                   
                   <div className="flex flex-col gap-3 mt-6 pt-6 border-t border-[var(--border)] text-[var(--muted-foreground)] text-xs">
                     <span className="flex items-center gap-2"><CalendarDays size={16} className="text-[var(--maroon)]" /> 2nd Oct, 5:15 AM Report • 6:00 AM Flag Off</span>
-                    <span className="flex items-center gap-2"><MapPin size={16} className="text-[var(--maroon)]" /> Rhino Museum Point → Rilbong Maidan</span>
+                    <span className="flex items-center gap-2"><MapPin size={16} className="text-[var(--maroon)]" /> Rhino Museum Point → Rilbong Puja Mandap</span>
                     <span className="flex items-center gap-2"><Trophy size={16} className="text-[var(--maroon)]" /> Entry Fee: ₹300</span>
                   </div>
                   
@@ -321,7 +301,7 @@ export default function Page() {
                     <div>
                       <span className="text-[var(--saffron)] text-[10px] font-bold tracking-[0.15em] uppercase block mb-1">Visit Us</span>
                       <address className="not-italic font-serif text-xl text-[var(--ink)] leading-snug">
-                        Rilbong Maidan,<br />Shillong, Meghalaya - 793004
+                        Rilbong Maidan, Shillong, Meghalaya - 793004
                       </address>
                     </div>
                   </div>
@@ -332,7 +312,7 @@ export default function Page() {
                     </div>
                     <div>
                       <span className="text-[var(--saffron)] text-[10px] font-bold tracking-[0.15em] uppercase block mb-1">Call Us</span>
-                      <a href="tel:+919876543210" className="font-serif text-xl text-[var(--ink)] hover:text-[var(--maroon)] transition-colors">+91 98765 43210</a>
+                      <a href="tel:+919436103190" className="font-serif text-xl text-[var(--ink)] hover:text-[var(--maroon)] transition-colors">+91 94361 03190</a>
                     </div>
                   </div>
 
@@ -342,7 +322,8 @@ export default function Page() {
                     </div>
                     <div>
                       <span className="text-[var(--saffron)] text-[10px] font-bold tracking-[0.15em] uppercase block mb-1">Email Us</span>
-                      <a href="mailto:contact@rilbongsanatanhindudharmasabha.org" className="font-serif text-lg text-[var(--ink)] hover:text-[var(--maroon)] transition-colors break-all">contact@rilbong<wbr/>sanatanhindu<wbr/>dharmasabha.org</a>
+                      <a href="mailto:rilbongsanatanhindudharmasabha@gmail.com
+" className="font-serif text-lg text-[var(--ink)] hover:text-[var(--maroon)] transition-colors break-all">rilbongsanatanhindudharmasabha@gmail.com</a>
                     </div>
                   </div>
                 </div>
@@ -381,8 +362,8 @@ export default function Page() {
       <footer className="bg-[var(--deep-maroon)] text-[#fffaf3]">
         <div className="container mx-auto px-6 max-w-[1180px] flex flex-col md:flex-row items-start md:items-center justify-between gap-8 py-12">
           <a className="flex flex-col leading-tight" href="#home">
-            <strong className="text-[var(--gold)] font-serif text-xl tracking-tight">Rilbong</strong>
-            <small className="text-[10px] uppercase tracking-widest text-[#fffaf3]/60 mt-1">Sanatan Hindu Dharma Sabha</small>
+            <strong className="text-[var(--gold)] font-serif text-xl tracking-tight">Rilbong Sanatan Hindu Dharma Sabha</strong>
+            <small className="text-[10px] uppercase tracking-widest text-[#fffaf3]/60 mt-1">Community, Welfare & Tradition</small>
           </a>
           <p className="text-[#fffaf3]/60 font-serif text-xl italic">Community, welfare, and tradition — together.</p>
         </div>
