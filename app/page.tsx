@@ -160,7 +160,7 @@ export default function Page() {
         <div className="flex items-center justify-around gap-8 w-max min-w-full py-3">
           <span className="inline-flex items-center gap-2 text-[10px] font-bold tracking-[0.16em] whitespace-nowrap"><Sparkles size={11} /> RILBONG COMMUNITY FESTIVAL</span><i className="text-[var(--gold)] text-xs not-italic">✦</i>
           <span className="inline-flex items-center gap-2 text-[10px] font-bold tracking-[0.16em] whitespace-nowrap">3 OCT / FOOD FESTIVAL</span><i className="text-[var(--gold)] text-xs not-italic">✦</i>
-          <span className="inline-flex items-center gap-2 text-[10px] font-bold tracking-[0.16em] whitespace-nowrap">2 OCT / CHARITY MARATHON</span><i className="text-[var(--gold)] text-xs not-italic">✦</i>
+          <span className="inline-flex items-center gap-2 text-[10px] font-bold tracking-[0.16em] whitespace-nowrap">2 OCT / MARATHON</span><i className="text-[var(--gold)] text-xs not-italic">✦</i>
           <span className="inline-flex items-center gap-2 text-[10px] font-bold tracking-[0.16em] whitespace-nowrap">FAITH · CULTURE · COMMUNITY</span><i className="text-[var(--gold)] text-xs not-italic">✦</i>
         </div>
       </div>
@@ -186,7 +186,7 @@ export default function Page() {
             <Reveal>
               <div className="flex items-center gap-4">
                 <span className="w-12 h-[2px] bg-[var(--gold)]"></span>
-                <span className="text-[var(--gold)] text-xs font-bold tracking-[0.25em] uppercase">1926 — 2026</span>
+                <span className="text-[var(--gold)] text-xs font-bold tracking-[0.25em] uppercase">1927 — 2026</span>
               </div>
             </Reveal>
             <Reveal delay={100}>
@@ -347,7 +347,7 @@ export default function Page() {
                 </div>
                 <div className="md:col-span-7 p-8 md:p-12 flex flex-col justify-center">
                   <span className="text-[var(--saffron)] text-[10px] font-bold tracking-[0.13em] uppercase">2 October 2026</span>
-                  <h3 className="mt-4 text-4xl md:text-5xl font-serif tracking-tight leading-[0.95]">Rilbong Charity<br />Marathon</h3>
+                  <h3 className="mt-4 text-4xl md:text-5xl font-serif tracking-tight leading-[0.95]">Rilbong Centennial<br />Marathon</h3>
                   <p className="mt-4 text-[var(--muted-foreground)] text-base max-w-md">Every stride is a promise to do more. Join our community run supporting local welfare initiatives, open to everyone in Shillong.</p>
                   
                   <div className="flex flex-col gap-3 mt-6 pt-6 border-t border-[var(--border)] text-[var(--muted-foreground)] text-xs">
