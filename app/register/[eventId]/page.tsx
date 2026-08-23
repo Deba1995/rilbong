@@ -552,8 +552,14 @@ export default function EventRegisterPage() {
                   <Building2 size={13} /> {event.org}
                 </div>
               )}
-              <h1 className="text-2xl sm:text-3xl lg:text-[2.2rem] font-bold tracking-tight leading-[1.1] text-[#17171a]">
-                {event.title}
+              <h1 className="text-2xl sm:text-3xl lg:text-[2.2rem] font-bold tracking-tight leading-[1.1] text-[#17171a] uppercase">
+                {event.description ? (
+                  <span className="inline-flex items-center gap-2">
+                    {event.title}
+                  </span>
+                ) : (
+                  event.title
+                )}
               </h1>
             </div>
 
@@ -592,7 +598,7 @@ export default function EventRegisterPage() {
               )}
             </div>
 
-            {event.description && (
+            {/* {event.description && (
               <div className="pt-2 border-t border-[#ececec]">
                 <h2 className="text-sm font-bold text-[#17171a] mb-2 pt-6">
                   About this event
@@ -601,7 +607,7 @@ export default function EventRegisterPage() {
                   {event.description}
                 </p>
               </div>
-            )}
+            )} */}
 
             {event.rules && event.rules.length > 0 && (
               <div className="pt-2 border-t border-[#ececec]">
