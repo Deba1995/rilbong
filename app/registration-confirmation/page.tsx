@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 type RegistrationData = {
@@ -27,7 +27,22 @@ type RegistrationData = {
   fields: { id: string; label: string; type: string; options?: any[] }[]
 }
 
+// 1. THIS IS THE MAIN ENTRYPOINT (Safe for Next.js Build optimization)
 export default function RegistrationConfirmationPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3">
+        <div className="w-8 h-8 border-2 border-zinc-300 border-t-zinc-900 rounded-full animate-spin" />
+        <p className="text-sm text-zinc-500 font-medium">Loading your confirmation...</p>
+      </div>
+    }>
+      <ConfirmationDetails />
+    </Suspense>
+  )
+}
+
+// 2. THIS IS THE INTERNAL DYNAMIC WORKER
+function ConfirmationDetails() {
   const searchParams = useSearchParams()
   const rid = searchParams.get('rid')
 
@@ -195,19 +210,11 @@ export default function RegistrationConfirmationPage() {
                   <span>{registration.razorpayPaymentId}</span>
                 </div>
               )}
-              {registration.razorpayOrderId && (
-                <div className="flex justify-between">
-                  <span>Order ID:</span>
-                  <span>{registration.razorpayOrderId}</span>
-                </div>
-              )}
             </div>
 
-            <p className="text-[10px] text-center text-zinc-400">
-              This is a digital receipt for your event registration.
-            </p>
           </div>
         </div>
+
       </div>
     </div>
   )
