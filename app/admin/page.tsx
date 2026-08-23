@@ -62,6 +62,14 @@ function displayValue(
   return Array.isArray(val) ? val.map(resolve).join(", ") : resolve(val);
 }
 
+// A registration only counts as real money once it's actually confirmed —
+// 'pending' and 'failed' rows still carry an `amount` (set at draft-creation
+// time, before payment succeeds), so status must always be checked before
+// summing anything financial.
+function isConfirmed(r: Registration): boolean {
+  return r.status === "paid" || r.status === "free_confirmed";
+}
+
 export default function AdminPage() {
   const [events, setEvents] = useState<EventDef[]>([]);
   const [eventId, setEventId] = useState<string | null>(null);
@@ -90,37 +98,37 @@ export default function AdminPage() {
     });
   }, []);
 
-useEffect(() => {
-  if (!eventId) {
-    setRegistrations([]);
-    return;
-  }
-  setTicketFilter("all");
-  setFieldFilters({});
-  setIsLoadingRegs(true);
-
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    if (!session) {
+  useEffect(() => {
+    if (!eventId) {
       setRegistrations([]);
-      setIsLoadingRegs(false);
       return;
     }
-    fetch("/api/admin/registrations", {
-      headers: { Authorization: `Bearer ${session.access_token}` },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const allRegs: Registration[] = data.registrations || [];
-        setRegistrations(allRegs.filter((r) => r.eventId === eventId));
-        setIsLoadingRegs(false);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch registrations:", err);
+    setTicketFilter("all");
+    setFieldFilters({});
+    setIsLoadingRegs(true);
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
         setRegistrations([]);
         setIsLoadingRegs(false);
-      });
-  });
-}, [eventId]);
+        return;
+      }
+      fetch("/api/admin/registrations", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          const allRegs: Registration[] = data.registrations || [];
+          setRegistrations(allRegs.filter((r) => r.eventId === eventId));
+          setIsLoadingRegs(false);
+        })
+        .catch((err) => {
+          console.error("Failed to fetch registrations:", err);
+          setRegistrations([]);
+          setIsLoadingRegs(false);
+        });
+    });
+  }, [eventId]);
 
   const event = events.find((e) => e.id === eventId);
 
@@ -138,25 +146,51 @@ useEffect(() => {
     return true;
   });
 
-  const revenue = filteredRegistrations.reduce(
+  // ---- Confirmed vs at-risk split — this is the fix ----
+  // Revenue, avg value, and both charts must only reflect money that actually
+  // landed. Pending/failed registrations are tracked separately so a payment
+  // failure is a visible flag on the dashboard, not silently folded into
+  // "revenue" and not silently hidden either.
+  const confirmedRegistrations = useMemo(
+    () => filteredRegistrations.filter(isConfirmed),
+    [filteredRegistrations],
+  );
+  const atRiskRegistrations = useMemo(
+    () => filteredRegistrations.filter((r) => !isConfirmed(r)),
+    [filteredRegistrations],
+  );
+
+  const revenue = confirmedRegistrations.reduce(
+    (sum, r) => sum + (r.amount || 0),
+    0,
+  );
+  const atRiskAmount = atRiskRegistrations.reduce(
     (sum, r) => sum + (r.amount || 0),
     0,
   );
 
-  // ---- Insights (derived from the currently filtered set) ----
+  const avgTicketValue =
+    confirmedRegistrations.length > 0
+      ? Math.round(revenue / confirmedRegistrations.length)
+      : 0;
+
+  // ---- Insights (now sourced from confirmed-only registrations) ----
 
   const ticketDistribution = useMemo(() => {
     if (!event) return [];
     const counts = new Map<string, number>();
-    for (const r of filteredRegistrations) {
+    for (const r of confirmedRegistrations) {
       counts.set(r.ticketId, (counts.get(r.ticketId) || 0) + 1);
     }
     return event.tickets
       .map((t) => ({ name: t.name, value: counts.get(t.id) || 0 }))
       .filter((d) => d.value > 0);
-  }, [event, filteredRegistrations]);
+  }, [event, confirmedRegistrations]);
 
   const statusBreakdown = useMemo(() => {
+    // This one intentionally still looks at ALL filtered registrations —
+    // its whole job is showing the paid/pending/failed split, so it must
+    // include the non-confirmed rows to be meaningful.
     const counts = { paid: 0, pending: 0, failed: 0 };
     for (const r of filteredRegistrations) {
       const s = r.status || "paid";
@@ -169,7 +203,7 @@ useEffect(() => {
 
   const registrationsByDay = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const r of filteredRegistrations) {
+    for (const r of confirmedRegistrations) {
       // Strictly formatted to IST (Asia/Kolkata)
       const day = new Date(r.createdAt).toLocaleDateString("en-IN", {
         timeZone: "Asia/Kolkata",
@@ -181,12 +215,7 @@ useEffect(() => {
     return Array.from(counts.entries())
       .map(([day, count]) => ({ day, count }))
       .slice(-14);
-  }, [filteredRegistrations]);
-
-  const avgTicketValue =
-    filteredRegistrations.length > 0
-      ? Math.round(revenue / filteredRegistrations.length)
-      : 0;
+  }, [confirmedRegistrations]);
 
   const downloadCSV = () => {
     if (!event) return;
@@ -203,6 +232,10 @@ useEffect(() => {
       "Registration Date",
     ];
 
+    // CSV export intentionally still includes every filtered row (paid, pending,
+    // failed) — this is a full audit export, not a revenue summary, so hiding
+    // non-confirmed rows here would remove the exact records you'd need to
+    // investigate a payment discrepancy.
     const rows = filteredRegistrations.map((r) => {
       const ticketName =
         event.tickets.find((t) => t.id === r.ticketId)?.name || "Unknown";
@@ -328,10 +361,17 @@ useEffect(() => {
                     </div>
                     <div className="flex items-end gap-2">
                       <p className="text-3xl font-black text-[#1a2b4c]">
-                        {isLoadingRegs ? "–" : filteredRegistrations.length}
+                        {isLoadingRegs ? "–" : confirmedRegistrations.length}
                       </p>
-                      <p className="text-xs text-[#94a3b8] mb-1">entries</p>
+                      <p className="text-xs text-[#94a3b8] mb-1">confirmed</p>
                     </div>
+                    {!isLoadingRegs && atRiskRegistrations.length > 0 && (
+                      <p className="mt-2 text-[11px] font-semibold text-amber-600 flex items-center gap-1">
+                        <AlertTriangle size={11} />{" "}
+                        {atRiskRegistrations.length} pending/failed — not
+                        counted
+                      </p>
+                    )}
                   </div>
 
                   <div className="rounded-2xl border border-[#e6e8ec] bg-white p-6 shadow-sm">
@@ -345,8 +385,15 @@ useEffect(() => {
                           ? "–"
                           : `₹${revenue.toLocaleString("en-IN")}`}
                       </p>
-                      <p className="text-xs text-[#94a3b8] mb-1">collected</p>
+                      <p className="text-xs text-[#94a3b8] mb-1">confirmed</p>
                     </div>
+                    {!isLoadingRegs && atRiskAmount > 0 && (
+                      <p className="mt-2 text-[11px] font-semibold text-amber-600 flex items-center gap-1">
+                        <AlertTriangle size={11} /> ₹
+                        {atRiskAmount.toLocaleString("en-IN")} pending/failed —
+                        not counted
+                      </p>
+                    )}
                   </div>
 
                   <div className="rounded-2xl border border-[#e6e8ec] bg-white p-6 shadow-sm">
@@ -361,6 +408,9 @@ useEffect(() => {
                           : `₹${avgTicketValue.toLocaleString("en-IN")}`}
                       </p>
                     </div>
+                    <p className="mt-2 text-[11px] text-[#94a3b8]">
+                      Based on confirmed registrations only
+                    </p>
                   </div>
 
                   <div className="rounded-2xl border border-[#e6e8ec] bg-white p-6 shadow-sm">
@@ -390,11 +440,11 @@ useEffect(() => {
                       Ticket Distribution
                     </h3>
                     <p className="text-xs text-[#94a3b8] mb-4">
-                      Share of registrations by pass type
+                      Share of confirmed registrations by pass type
                     </p>
                     {ticketDistribution.length === 0 ? (
                       <div className="h-[220px] flex items-center justify-center text-sm text-[#94a3b8]">
-                        No data for the current filters.
+                        No confirmed data for the current filters.
                       </div>
                     ) : (
                       <>
@@ -474,11 +524,12 @@ useEffect(() => {
                       Registrations Over Time
                     </h3>
                     <p className="text-xs text-[#94a3b8] mb-4">
-                      Daily sign-up volume (last 14 active days in IST)
+                      Daily confirmed sign-up volume (last 14 active days in
+                      IST)
                     </p>
                     {registrationsByDay.length === 0 ? (
                       <div className="h-[220px] flex items-center justify-center text-sm text-[#94a3b8]">
-                        No data for the current filters.
+                        No confirmed data for the current filters.
                       </div>
                     ) : (
                       <ResponsiveContainer width="100%" height={220}>
@@ -648,10 +699,17 @@ useEffect(() => {
                           const ticketName =
                             event.tickets.find((t) => t.id === r.ticketId)
                               ?.name || "Unknown";
+                          const confirmed = isConfirmed(r);
                           return (
                             <tr
                               key={r.id}
-                              className="hover:bg-[#f7f8fa] transition-colors"
+                              className={`hover:bg-[#f7f8fa] transition-colors ${
+                                r.status === "failed"
+                                  ? "border-l-4 border-l-rose-400"
+                                  : !confirmed
+                                    ? "border-l-4 border-l-amber-400"
+                                    : ""
+                              }`}
                             >
                               <td className="px-6 py-4 font-semibold text-[#1a2b4c] whitespace-nowrap">
                                 {ticketName}
@@ -694,16 +752,14 @@ useEffect(() => {
                               <td className="px-6 py-4 font-bold whitespace-nowrap">
                                 <span
                                   className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-[10px] uppercase tracking-wider ${
-                                    r.status === "paid" ||
-                                    r.status === "free_confirmed"
+                                    confirmed
                                       ? "bg-emerald-100 text-emerald-800"
                                       : r.status === "failed"
                                         ? "bg-rose-100 text-rose-800"
                                         : "bg-amber-100 text-amber-800"
                                   }`}
                                 >
-                                  {r.status === "paid" ||
-                                  r.status === "free_confirmed" ? (
+                                  {confirmed ? (
                                     <CheckCircle2 size={11} />
                                   ) : r.status === "failed" ? (
                                     <XCircle size={11} />
@@ -713,7 +769,18 @@ useEffect(() => {
                                   {r.status || "paid"}
                                 </span>
                               </td>
-                              <td className="px-6 py-4 font-bold text-[#1a2b4c] whitespace-nowrap">
+                              <td
+                                className={`px-6 py-4 font-bold whitespace-nowrap ${
+                                  confirmed
+                                    ? "text-[#1a2b4c]"
+                                    : "text-[#94a3b8] line-through decoration-2"
+                                }`}
+                                title={
+                                  confirmed
+                                    ? undefined
+                                    : "Not counted in Revenue — payment not confirmed"
+                                }
+                              >
                                 ₹{(r.amount || 0).toLocaleString("en-IN")}
                               </td>
                               <td className="px-6 py-4 text-[#94a3b8] font-mono text-xs whitespace-nowrap">
