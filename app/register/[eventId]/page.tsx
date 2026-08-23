@@ -555,7 +555,7 @@ export default function EventRegisterPage() {
               <h1 className="text-2xl sm:text-3xl lg:text-[2.2rem] font-bold tracking-tight leading-[1.1] text-[#17171a] uppercase">
                 {event.description ? (
                   <span className="inline-flex items-center gap-2">
-                    {event.title}
+                    {event.description}
                   </span>
                 ) : (
                   event.title
