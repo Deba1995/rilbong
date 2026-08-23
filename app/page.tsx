@@ -245,7 +245,7 @@ export default function Page() {
                   
                   <div className="mt-8 flex items-center gap-4">
                     <a 
-                      href="https://rzp.io/rzp/rilbong-food-festival" 
+                      href="/register/foodfest-rilbong" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--maroon)] text-[#fffaf3] font-bold text-sm rounded-full hover:bg-[var(--deep-maroon)] hover:-translate-y-0.5 transition-all"
