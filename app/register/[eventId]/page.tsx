@@ -400,6 +400,15 @@ export default function EventRegisterPage() {
         return;
       }
 
+      // 1. Extract email and phone from the form values
+      const customerEmail = Object.values(finalValues).find(
+        (v) => typeof v === 'string' && v.includes('@')
+      ) as string | undefined
+
+      const customerPhone = Object.values(finalValues).find(
+        (v) => typeof v === 'string' && /^[0-9]{10}$/.test(v.replace(/\D/g, ''))
+      ) as string | undefined
+
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: orderData.amount,
@@ -407,6 +416,10 @@ export default function EventRegisterPage() {
         name: event.org,
         description: event.title,
         order_id: orderData.orderId,
+        prefill: {
+          email: customerEmail || '',
+          contact: customerPhone || '',
+        },
         handler: async function (response: any) {
           try {
             const verifyRes = await fetch("/api/verify", {
