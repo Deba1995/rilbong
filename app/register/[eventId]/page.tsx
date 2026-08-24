@@ -22,6 +22,7 @@ import {
   Users,
   Mail,
   Phone,
+  Map
 } from "lucide-react";
 import { getEvent } from "@/lib/events-store";
 import type { EventDef, FieldDef } from "@/lib/event-schema";
@@ -507,6 +508,17 @@ export default function EventRegisterPage() {
     0,
   );
 
+// --- MAGIC ROUTE PARSER LOGIC ---
+  let displayDescription = event.description || "";
+  let routeContent: string | null = null;
+
+  // Check if the description contains our secret delimiter
+  if (displayDescription.includes("- Route")) {
+    const parts = displayDescription.split("- Route");
+    displayDescription = parts[0].trim(); // Everything before "- Route"
+    routeContent = parts[1].trim();       // Everything after "- Route"
+  }
+
   return (
     <main className="min-h-screen bg-[#fafafa] font-sans text-[#17171a]">
       <Script
@@ -558,7 +570,7 @@ export default function EventRegisterPage() {
                 </div>
               )}
               <h1 className="text-2xl sm:text-3xl lg:text-[2.35rem] font-extrabold tracking-tight leading-[1.12] text-[#17171a]">
-                {event.description ? event.description : event.title}
+                {displayDescription ? displayDescription : event.title}
               </h1>
             </div>
 
@@ -596,7 +608,7 @@ export default function EventRegisterPage() {
                     icon={CalendarClock}
                     label="Registration Window"
                     value={
-                      <span className="font-medium text-[#17171a] text-xs leading-relaxed block">
+                      <span className="font-semibold text-[#17171a] text-xs leading-relaxed block">
                         {event.startDate ? formatShortDate(event.startDate) : "Now"} –{" "}
                         {event.endDate ? formatShortDate(event.endDate) : "Until spots last"}
                       </span>
@@ -672,6 +684,64 @@ export default function EventRegisterPage() {
                 </ExpandSection>
               </div>
             )}
+
+            {/* --- MAGIC ROUTE TRACK UI --- */}
+            {routeContent && (
+              <div className="pt-2 border-t border-[#ececec]">
+                <ExpandSection
+                  defaultOpen={false}
+                  title={
+                    <div className="flex items-center gap-2">
+                      <div className="w-7 h-7 rounded-lg bg-[#f0fdf4] text-emerald-600 flex items-center justify-center border border-[#dcfce7]">
+                        <Map size={15} strokeWidth={2.5} />
+                      </div>
+                      <span className="font-bold text-[#17171a] tracking-tight">
+                        Event Route Map
+                      </span>
+                    </div>
+                  }
+                >
+                  <div className="relative pl-3 pt-4 pb-2">
+                    {/* The continuous vertical track line */}
+                    <div className="absolute top-6 bottom-6 left-[19.5px] w-[2px] bg-gradient-to-b from-emerald-500 via-[#c9c4f7] to-[#c0392b] rounded-full"></div>
+
+                    <div className="space-y-6 relative">
+                      {routeContent
+                        .split('\n')
+                        .filter((line) => line.trim() !== '')
+                        .map((step, idx, arr) => {
+                          const isFirst = idx === 0;
+                          const isLast = idx === arr.length - 1;
+                          
+                          // Dynamic Dot Colors
+                          let dotColor = "bg-[#5b4fe5] border-[#f2f1fb]";
+                          if (isFirst) dotColor = "bg-emerald-500 border-[#f0fdf4]";
+                          if (isLast) dotColor = "bg-[#c0392b] border-[#fef2f2]";
+
+                          return (
+                            <div key={idx} className="flex items-start gap-4 group">
+                              {/* Route Checkpoint Dot */}
+                              <div
+                                className={`relative z-10 w-4 h-4 rounded-full border-[3px] shadow-sm mt-0.5 shrink-0 transition-transform group-hover:scale-125 ${dotColor}`}
+                              ></div>
+
+                              {/* Route Text */}
+                              <div className="flex-1 -mt-0.5">
+                                <p className={`text-sm font-semibold transition-colors ${isFirst || isLast ? 'text-[#17171a]' : 'text-[#404044] group-hover:text-[#17171a]'}`}>
+                                  {step.trim()}
+                                </p>
+                                {isFirst && <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider mt-0.5">Start</p>}
+                                {isLast && <p className="text-[10px] font-bold text-[#c0392b] uppercase tracking-wider mt-0.5">Finish Line</p>}
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
+                  </div>
+                </ExpandSection>
+              </div>
+            )}
+
 
             <div className="pt-2 border-t border-[#ececec]">
               <h2 className="text-xs font-bold uppercase tracking-wider text-[#9a9aa2] mb-1">
