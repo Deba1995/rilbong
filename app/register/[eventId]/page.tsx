@@ -666,7 +666,7 @@ export default function EventRegisterPage() {
                       Organized by
                     </p>
                     <p className="text-sm font-bold text-[#17171a] mt-0.5">
-                      {event.org || "Event Host"}
+                      Rilbong
                     </p>
                     <p className="text-xs text-[#68686e] mt-0.5">
                       Need help or have questions about this event?
