@@ -276,7 +276,14 @@ export default function Page() {
                   </div>
                   
                   <div className="mt-8 flex items-center gap-4">
-                    <button className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-[var(--ink)] font-bold text-sm rounded-full hover:bg-[var(--marigold)] hover:-translate-y-0.5 transition-all">Register Now <ArrowUpRight size={16} /></button>
+                    <a 
+                      href="/register/marathon" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--gold)] text-[var(--ink)] font-bold text-sm rounded-full hover:bg-[var(--marigold)] hover:-translate-y-0.5 transition-all"
+                    >
+                      Register Now <ArrowUpRight size={16} />
+                    </a>
                   </div>
                 </div>
               </article>
