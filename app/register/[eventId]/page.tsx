@@ -549,58 +549,77 @@ export default function EventRegisterPage() {
         <div className="grid lg:grid-cols-[1fr_380px] gap-6 lg:gap-8 items-start">
           {/* LEFT: details card */}
           <div className="bg-white rounded-3xl shadow-[0_20px_50px_-20px_rgba(23,23,26,0.15)] border border-[#ececec] p-6 sm:p-9 space-y-8">
-            <div>
+            {/* Header & Event Title */}
+            <div className="space-y-3">
               {event.org && (
-                <div className="inline-flex items-center gap-2 bg-[#f2f1fb] text-[#5b4fe5] text-xs font-bold px-3 py-1.5 rounded-full mb-4">
-                  <Building2 size={13} /> {event.org}
+                <div className="inline-flex items-center gap-2 bg-gradient-to-r from-[#f2f1fb] to-[#ece9fc] border border-[#ded9fa] text-[#5b4fe5] text-xs font-bold px-3.5 py-1.5 rounded-full shadow-xs">
+                  <Building2 size={13} className="text-[#5b4fe5]" />
+                  <span>{event.org}</span>
                 </div>
               )}
-              <h1 className="text-2xl sm:text-3xl lg:text-[2.2rem] font-bold tracking-tight leading-[1.1] text-[#17171a] uppercase">
-                {event.description ? (
-                  <span className="inline-flex items-center gap-2">
-                    {event.description}
-                  </span>
-                ) : (
-                  event.title
-                )}
+              <h1 className="text-2xl sm:text-3xl lg:text-[2.35rem] font-extrabold tracking-tight leading-[1.12] text-[#17171a]">
+                {event.description ? event.description : event.title}
               </h1>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-5">
+            {/* Quick Meta Grid (Luma/Dribbble Micro-Cards) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               {schedule && (
-                <InfoRow
-                  icon={Calendar}
-                  label="When"
-                  value={
-                    <>
-                      {schedule.day}
-                      <br />
-                      <span className="text-[#68686e] font-normal">
-                        {schedule.time}
-                      </span>
-                    </>
-                  }
-                />
+                <div className="p-4 rounded-2xl bg-[#fafafa] border border-[#ececec] hover:border-[#ded9fa] transition-colors">
+                  <InfoRow
+                    icon={Calendar}
+                    label="When"
+                    value={
+                      <>
+                        <span className="font-semibold text-[#17171a]">{schedule.day}</span>
+                        <br />
+                        <span className="text-[#68686e] text-xs font-normal">{schedule.time}</span>
+                      </>
+                    }
+                  />
+                </div>
               )}
+
               {event.address && (
-                <InfoRow icon={MapPin} label="Where" value={event.address} />
+                <div className="p-4 rounded-2xl bg-[#fafafa] border border-[#ececec] hover:border-[#ded9fa] transition-colors">
+                  <InfoRow
+                    icon={MapPin}
+                    label="Where"
+                    value={<span className="font-semibold text-[#17171a]">{event.address}</span>}
+                  />
+                </div>
               )}
+
               {(event.startDate || event.endDate) && (
-                <InfoRow
-                  icon={CalendarClock}
-                  label="Registration Window"
-                  value={`${event.startDate ? formatShortDate(event.startDate) : "Now"} – ${event.endDate ? formatShortDate(event.endDate) : "Until spots last"}`}
-                />
+                <div className="p-4 rounded-2xl bg-[#fafafa] border border-[#ececec] hover:border-[#ded9fa] transition-colors">
+                  <InfoRow
+                    icon={CalendarClock}
+                    label="Registration Window"
+                    value={
+                      <span className="font-medium text-[#17171a] text-xs leading-relaxed block">
+                        {event.startDate ? formatShortDate(event.startDate) : "Now"} –{" "}
+                        {event.endDate ? formatShortDate(event.endDate) : "Until spots last"}
+                      </span>
+                    }
+                  />
+                </div>
               )}
+
               {totalCapacity > 0 && (
-                <InfoRow
-                  icon={Users}
-                  label="Spots"
-                  value={`${Math.max(totalCapacity - totalSold, 0)} of ${totalCapacity} remaining`}
-                />
+                <div className="p-4 rounded-2xl bg-[#fafafa] border border-[#ececec] hover:border-[#ded9fa] transition-colors">
+                  <InfoRow
+                    icon={Users}
+                    label="Spots"
+                    value={
+                      <span className="inline-flex items-center gap-1.5 font-semibold text-[#17171a]">
+                        <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shrink-0" />
+                        {Math.max(totalCapacity - totalSold, 0)} of {totalCapacity} remaining
+                      </span>
+                    }
+                  />
+                </div>
               )}
             </div>
-
             {/* {event.description && (
               <div className="pt-2 border-t border-[#ececec]">
                 <h2 className="text-sm font-bold text-[#17171a] mb-2 pt-6">
@@ -612,7 +631,6 @@ export default function EventRegisterPage() {
               </div>
             )} */}
 
-            {/* Rules & Regulations — Dribbble Modern Card Grid */}
             {/* Rules & Regulations — Expandable Accordion with Modern Cards */}
             {event.rules && event.rules.length > 0 && (
               <div className="pt-2 border-t border-[#ececec]">
