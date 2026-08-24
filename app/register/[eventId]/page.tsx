@@ -742,14 +742,18 @@ export default function EventRegisterPage() {
           </div>
 
           {/* RIGHT: sticky ticket/registration card */}
+            {/* RIGHT: sticky ticket/registration card */}
           <div className="lg:sticky lg:top-6">
             <form
               onSubmit={onSubmit}
-              className="bg-white rounded-3xl shadow-[0_20px_50px_-20px_rgba(23,23,26,0.2)] border border-[#ececec] p-6 sm:p-7 space-y-6"
+              className="bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-[#ececec] p-6 sm:p-8 space-y-7"
             >
+              {/* Closed / Upcoming Status Banner */}
               {!isEventOpen && (
-                <div className="p-3.5 rounded-2xl bg-[#fef2f2] text-[#c0392b] text-xs font-medium flex items-center gap-2.5">
-                  <Lock size={16} className="shrink-0" />
+                <div className="p-4 rounded-2xl bg-gradient-to-r from-[#fff4f4] to-[#fef2f2] border border-[#fbd5d5] text-[#c0392b] text-xs font-semibold flex items-center gap-3 shadow-xs">
+                  <div className="p-1.5 bg-white rounded-full shadow-sm">
+                    <Lock size={14} className="shrink-0" />
+                  </div>
                   <span>
                     {availability === "upcoming" ? (
                       <>Opens {formatShortDate(event.startDate)}</>
@@ -760,11 +764,12 @@ export default function EventRegisterPage() {
                 </div>
               )}
 
+              {/* Ticket Selection */}
               <div>
-                <label className="text-xs font-bold uppercase tracking-wide text-[#9a9aa2] mb-3 flex items-center gap-1.5">
-                  <Ticket size={13} /> Select your pass
+                <label className="text-[11px] font-bold uppercase tracking-wider text-[#9a9aa2] mb-3.5 flex items-center gap-2">
+                  <Ticket size={14} /> Select your pass
                 </label>
-                <div className="space-y-2.5">
+                <div className="space-y-3">
                   {event.tickets.map((tkt) => {
                     const sold = claims[tkt.id] || 0;
                     const stockLeft = tkt.capacity ? tkt.capacity - sold : null;
@@ -773,15 +778,15 @@ export default function EventRegisterPage() {
                     return (
                       <label
                         key={tkt.id}
-                        className={`flex items-center justify-between p-3.5 rounded-2xl border-2 transition-all duration-200 ${
+                        className={`relative flex items-center justify-between p-4 rounded-2xl border-2 transition-all duration-300 ${
                           isSoldOut || !isEventOpen
-                            ? "cursor-not-allowed opacity-40 bg-[#f7f7f8] border-transparent"
+                            ? "cursor-not-allowed opacity-50 bg-[#f9f9fa] border-transparent"
                             : isSelected
-                              ? "border-[#5b4fe5] bg-[#f2f1fb] cursor-pointer"
-                              : "border-[#ececec] hover:border-[#c9c4f7] cursor-pointer"
+                              ? "border-[#5b4fe5] bg-gradient-to-r from-[#f4f3fc] to-white shadow-sm cursor-pointer"
+                              : "border-[#ececec] hover:border-[#ded9fa] bg-white cursor-pointer hover:shadow-xs"
                         }`}
                       >
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-3.5">
                           <input
                             type="radio"
                             disabled={!isEventOpen || isSoldOut}
@@ -798,18 +803,18 @@ export default function EventRegisterPage() {
                               {tkt.name}
                             </div>
                             {stockLeft !== null && !isSoldOut && (
-                              <div className="text-[10px] font-bold text-[#c9820a] mt-0.5">
+                              <div className="text-[11px] font-semibold text-[#c9820a] mt-0.5">
                                 {stockLeft} left
                               </div>
                             )}
                             {isSoldOut && (
-                              <div className="text-[10px] font-bold text-[#c0392b] mt-0.5">
+                              <div className="text-[11px] font-bold text-[#c0392b] mt-0.5">
                                 Sold out
                               </div>
                             )}
                           </div>
                         </div>
-                        <span className="text-sm font-bold text-[#17171a] shrink-0">
+                        <span className="text-[15px] font-extrabold text-[#17171a] shrink-0">
                           {tkt.price === 0 ? "Free" : `₹${tkt.price}`}
                         </span>
                       </label>
@@ -818,10 +823,11 @@ export default function EventRegisterPage() {
                 </div>
               </div>
 
-              <div className="space-y-4 pt-2 border-t border-[#ececec]">
+              {/* Dynamic Customer Fields */}
+              <div className="space-y-5 pt-6 border-t border-[#ececec]">
                 {customerFields.map((field) => (
                   <div key={field.id}>
-                    <label className="block text-xs font-bold text-[#17171a] mb-1.5">
+                    <label className="block text-xs font-bold text-[#17171a] mb-2 pl-1">
                       {field.label}{" "}
                       {field.required && (
                         <span className="text-[#5b4fe5]">*</span>
@@ -838,13 +844,13 @@ export default function EventRegisterPage() {
                         placeholder={field.placeholder}
                         value={(values[field.id] as string) ?? ""}
                         onChange={(e) => setValue(field.id, e.target.value)}
-                        className="w-full rounded-xl border border-[#e2e2e5] px-3.5 py-2.5 text-sm outline-none focus:border-[#5b4fe5] focus:ring-4 focus:ring-[#5b4fe5]/10 bg-[#fafafa] focus:bg-white transition-all"
+                        className="w-full rounded-2xl border border-[#e2e2e5] px-4 py-3.5 text-sm outline-none focus:border-[#5b4fe5] focus:ring-4 focus:ring-[#5b4fe5]/15 bg-[#fafafa] focus:bg-white transition-all shadow-sm"
                       />
                     )}
 
                     {field.type === "phone" && (
-                      <div className="flex rounded-xl border border-[#e2e2e5] overflow-hidden focus-within:border-[#5b4fe5] focus-within:ring-4 focus-within:ring-[#5b4fe5]/10 bg-[#fafafa] focus-within:bg-white transition-all">
-                        <span className="flex items-center px-3 text-xs font-bold text-[#9a9aa2] border-r border-[#e2e2e5]">
+                      <div className="flex rounded-2xl border border-[#e2e2e5] overflow-hidden focus-within:border-[#5b4fe5] focus-within:ring-4 focus-within:ring-[#5b4fe5]/15 bg-[#fafafa] focus-within:bg-white transition-all shadow-sm">
+                        <span className="flex items-center px-4 text-xs font-bold text-[#9a9aa2] border-r border-[#e2e2e5] bg-[#f9f9fa]">
                           +91
                         </span>
                         <input
@@ -854,7 +860,7 @@ export default function EventRegisterPage() {
                           placeholder={field.placeholder ?? "98765 43210"}
                           value={(values[field.id] as string) ?? ""}
                           onChange={(e) => setValue(field.id, e.target.value)}
-                          className="w-full px-3.5 py-2.5 text-sm outline-none bg-transparent"
+                          className="w-full px-4 py-3.5 text-sm outline-none bg-transparent"
                         />
                       </div>
                     )}
@@ -866,7 +872,7 @@ export default function EventRegisterPage() {
                         rows={3}
                         value={(values[field.id] as string) ?? ""}
                         onChange={(e) => setValue(field.id, e.target.value)}
-                        className="w-full rounded-xl border border-[#e2e2e5] px-3.5 py-2.5 text-sm outline-none focus:border-[#5b4fe5] focus:ring-4 focus:ring-[#5b4fe5]/10 bg-[#fafafa] focus:bg-white transition-all"
+                        className="w-full rounded-2xl border border-[#e2e2e5] px-4 py-3.5 text-sm outline-none focus:border-[#5b4fe5] focus:ring-4 focus:ring-[#5b4fe5]/15 bg-[#fafafa] focus:bg-white transition-all shadow-sm resize-none"
                       />
                     )}
 
@@ -876,7 +882,7 @@ export default function EventRegisterPage() {
                         required={field.required}
                         value={(values[field.id] as string) ?? ""}
                         onChange={(e) => setValue(field.id, e.target.value)}
-                        className="w-full rounded-xl border border-[#e2e2e5] px-3.5 py-2.5 text-sm outline-none focus:border-[#5b4fe5] bg-[#fafafa] cursor-pointer"
+                        className="w-full rounded-2xl border border-[#e2e2e5] px-4 py-3.5 text-sm outline-none focus:border-[#5b4fe5] focus:ring-4 focus:ring-[#5b4fe5]/15 bg-[#fafafa] focus:bg-white transition-all shadow-sm cursor-pointer"
                       >
                         <option value="">Select…</option>
                         {field.options?.map((o) => (
@@ -889,7 +895,7 @@ export default function EventRegisterPage() {
 
                     {(field.type === "radio" ||
                       field.type === "checkbox-group") && (
-                      <div className="space-y-2 mt-1">
+                      <div className="space-y-2.5 mt-1.5">
                         {field.options?.map((opt) => {
                           const isMulti = field.type === "checkbox-group";
                           const checked = isMulti
@@ -900,10 +906,10 @@ export default function EventRegisterPage() {
                           return (
                             <label
                               key={opt.id}
-                              className={`flex items-center gap-2.5 rounded-xl border p-2.5 text-xs transition-colors cursor-pointer ${
+                              className={`flex items-center gap-3 rounded-2xl border p-3.5 text-sm transition-all cursor-pointer ${
                                 checked
-                                  ? "border-[#5b4fe5] bg-[#f2f1fb] text-[#17171a] font-bold"
-                                  : "border-[#e2e2e5] hover:border-[#c9c4f7]"
+                                  ? "border-[#5b4fe5] bg-[#f4f3fc] text-[#17171a] font-bold shadow-sm"
+                                  : "border-[#e2e2e5] hover:border-[#c9c4f7] bg-[#fafafa] hover:bg-white text-[#404044]"
                               }`}
                             >
                               <input
@@ -927,11 +933,13 @@ export default function EventRegisterPage() {
 
                     {field.type === "file" && (
                       <div>
-                        <label className="flex items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[#e2e2e5] p-3.5 text-xs font-medium text-[#68686e] cursor-pointer hover:border-[#5b4fe5]/50 hover:bg-[#f2f1fb] bg-[#fafafa] transition-colors">
-                          <Upload size={15} className="text-[#5b4fe5]" />
-                          <span className="truncate">
+                        <label className="flex flex-col items-center justify-center gap-2.5 rounded-2xl border-2 border-dashed border-[#d4d4d8] hover:border-[#5b4fe5] p-6 text-xs font-medium text-[#68686e] cursor-pointer hover:bg-[#f9f9fa] bg-[#fafafa] transition-all group">
+                          <div className="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center border border-[#e2e2e5] group-hover:border-[#c9c4f7] transition-colors">
+                            <Upload size={16} className="text-[#5b4fe5]" />
+                          </div>
+                          <span className="truncate max-w-[200px]">
                             {photoPreviews[field.id]?.name ??
-                              "Upload PNG/JPEG, max 50KB"}
+                              "Upload PNG/JPEG (Max 50KB)"}
                           </span>
                           <input
                             type="file"
@@ -942,24 +950,24 @@ export default function EventRegisterPage() {
                           />
                         </label>
                         {fileErrors[field.id] && (
-                          <p className="mt-1.5 text-[10px] font-semibold text-[#c0392b] flex items-center gap-1">
-                            <AlertCircle size={11} className="shrink-0" />{" "}
+                          <p className="mt-2 text-[11px] font-semibold text-[#c0392b] flex items-center gap-1.5 bg-[#fef2f2] p-2 rounded-lg">
+                            <AlertCircle size={12} className="shrink-0" />{" "}
                             {fileErrors[field.id]}
                           </p>
                         )}
                         {photoPreviews[field.id] && !fileErrors[field.id] && (
-                          <div className="mt-2 relative inline-block">
+                          <div className="mt-3 relative inline-block group">
                             <img
                               src={photoPreviews[field.id].preview}
                               alt="Preview"
-                              className="h-14 w-14 rounded-lg object-cover border border-[#e2e2e5]"
+                              className="h-16 w-16 rounded-xl object-cover border-2 border-[#e2e2e5] shadow-sm"
                             />
                             <button
                               type="button"
                               onClick={() => removeSelectedFile(field.id)}
-                              className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-[#17171a] text-white flex items-center justify-center cursor-pointer hover:bg-[#c0392b] transition-colors"
+                              className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#17171a] text-white flex items-center justify-center cursor-pointer hover:bg-[#c0392b] hover:scale-110 transition-all shadow-md"
                             >
-                              <X size={10} />
+                              <X size={12} strokeWidth={3} />
                             </button>
                           </div>
                         )}
@@ -969,15 +977,16 @@ export default function EventRegisterPage() {
                 ))}
               </div>
 
-              <label className="flex items-start gap-2.5 cursor-pointer select-none pt-2 border-t border-[#ececec]">
+              {/* Terms Checkbox */}
+              <label className="flex items-start gap-3 cursor-pointer select-none pt-6 border-t border-[#ececec]">
                 <input
                   type="checkbox"
                   disabled={!isEventOpen}
                   checked={acceptedTerms}
                   onChange={(e) => setAcceptedTerms(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 accent-[#5b4fe5] cursor-pointer"
+                  className="mt-0.5 w-4 h-4 accent-[#5b4fe5] cursor-pointer rounded"
                 />
-                <span className="text-[11px] text-[#68686e] leading-relaxed">
+                <span className="text-xs text-[#68686e] leading-relaxed">
                   I agree to the event{" "}
                   <strong className="text-[#17171a]">Rules</strong>,{" "}
                   <strong className="text-[#17171a]">Terms</strong> and{" "}
@@ -985,45 +994,50 @@ export default function EventRegisterPage() {
                 </span>
               </label>
 
+              {/* Error Alert */}
               {error && (
-                <div className="p-3 bg-[#fef2f2] text-[#c0392b] text-xs font-semibold rounded-xl flex items-center gap-2">
-                  <AlertCircle size={14} className="shrink-0" /> {error}
+                <div className="p-3.5 bg-[#fef2f2] text-[#c0392b] text-xs font-semibold rounded-2xl flex items-center gap-2 border border-[#fbd5d5] shadow-xs">
+                  <AlertCircle size={16} className="shrink-0" /> 
+                  <span className="leading-snug">{error}</span>
                 </div>
               )}
 
-              <div className="pt-2 border-t border-[#ececec] flex items-center justify-between">
-                <span className="text-xs font-medium text-[#9a9aa2]">
-                  Total
-                </span>
-                <span className="text-xl font-bold text-[#17171a]">
-                  {amountToPay === 0 ? "Free" : `₹${amountToPay}`}
-                </span>
-              </div>
+              {/* Total & Submit Button */}
+              <div className="pt-6 border-t border-[#ececec]">
+                <div className="flex items-end justify-between mb-5 px-1">
+                  <span className="text-sm font-semibold text-[#9a9aa2]">
+                    Total Amount
+                  </span>
+                  <span className="text-[1.6rem] font-extrabold text-[#17171a] leading-none tracking-tight">
+                    {amountToPay === 0 ? "Free" : `₹${amountToPay}`}
+                  </span>
+                </div>
 
-              <button
-                type="submit"
-                disabled={
-                  isSubmitting ||
-                  !selectedTicketId ||
-                  !acceptedTerms ||
-                  !isEventOpen
-                }
-                className="w-full rounded-2xl bg-[#5b4fe5] hover:bg-[#4a3fd1] active:bg-[#4038b8] transition-colors duration-200 text-white font-bold py-3.5 text-sm shadow-[0_10px_25px_-8px_rgba(91,79,229,0.6)] disabled:opacity-40 disabled:shadow-none disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" /> Processing…
-                  </>
-                ) : availability === "upcoming" ? (
-                  "Not Open Yet"
-                ) : !isEventOpen ? (
-                  "Registrations Closed"
-                ) : amountToPay === 0 ? (
-                  "Reserve Free Spot"
-                ) : (
-                  `Pay ₹${amountToPay}`
-                )}
-              </button>
+                <button
+                  type="submit"
+                  disabled={
+                    isSubmitting ||
+                    !selectedTicketId ||
+                    !acceptedTerms ||
+                    !isEventOpen
+                  }
+                  className="relative w-full rounded-2xl bg-[#5b4fe5] hover:bg-[#4a3fd1] active:bg-[#4038b8] active:scale-[0.98] transition-all duration-200 text-white font-bold py-4 text-[15px] shadow-[0_8px_20px_-6px_rgba(91,79,229,0.5)] disabled:opacity-50 disabled:shadow-none disabled:active:scale-100 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2 overflow-hidden"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 size={18} className="animate-spin" /> Processing…
+                    </>
+                  ) : availability === "upcoming" ? (
+                    "Not Open Yet"
+                  ) : !isEventOpen ? (
+                    "Registrations Closed"
+                  ) : amountToPay === 0 ? (
+                    "Reserve Free Spot"
+                  ) : (
+                    `Pay ₹${amountToPay}`
+                  )}
+                </button>
+              </div>
             </form>
           </div>
         </div>
