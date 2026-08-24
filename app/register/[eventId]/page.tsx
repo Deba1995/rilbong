@@ -613,31 +613,33 @@ export default function EventRegisterPage() {
             )} */}
 
             {/* Rules & Regulations — Dribbble Modern Card Grid */}
+            {/* Rules & Regulations — Expandable Accordion with Modern Cards */}
             {event.rules && event.rules.length > 0 && (
               <div className="pt-2 border-t border-[#ececec]">
-                <div className="pt-6">
-                  <div className="flex items-center justify-between mb-4">
+                <ExpandSection
+                  defaultOpen={false}
+                  title={
                     <div className="flex items-center gap-2">
                       <div className="w-7 h-7 rounded-lg bg-[#f2f1fb] text-[#5b4fe5] flex items-center justify-center">
                         <ShieldCheck size={16} strokeWidth={2.5} />
                       </div>
-                      <h2 className="text-sm font-bold text-[#17171a] tracking-tight">
-                        Rules &amp; Guidelines
-                      </h2>
+                      <span className="font-bold text-[#17171a] tracking-tight">
+                        Rules &amp; Regulations
+                      </span>
+                      <span className="ml-1.5 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#fafafa] text-[#9a9aa2] border border-[#ececec]">
+                        {event.rules.length}{" "}
+                        {event.rules.length === 1 ? "Rule" : "Rules"}
+                      </span>
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#fafafa] text-[#9a9aa2] border border-[#ececec]">
-                      {event.rules.length}{" "}
-                      {event.rules.length === 1 ? "Rule" : "Rules"}
-                    </span>
-                  </div>
-
-                  <div className="grid gap-2.5">
+                  }
+                >
+                  <div className="grid gap-2.5 pt-2">
                     {event.rules.map((rule, idx) => (
                       <div
                         key={idx}
                         className="group relative flex items-start gap-3.5 p-3.5 rounded-2xl bg-gradient-to-r from-[#fafafa] to-white border border-[#ececec] hover:border-[#c9c4f7] hover:shadow-[0_4px_20px_-4px_rgba(91,79,229,0.08)] transition-all duration-200"
                       >
-                        {/* Number Pill / Step Indicator */}
+                        {/* Number Pill */}
                         <span className="shrink-0 flex items-center justify-center w-6 h-6 rounded-lg bg-white group-hover:bg-[#5b4fe5] group-hover:text-white border border-[#e2e2e5] group-hover:border-[#5b4fe5] text-[11px] font-bold text-[#68686e] shadow-xs transition-colors duration-200">
                           {String(idx + 1).padStart(2, "0")}
                         </span>
@@ -649,7 +651,7 @@ export default function EventRegisterPage() {
                       </div>
                     ))}
                   </div>
-                </div>
+                </ExpandSection>
               </div>
             )}
 
