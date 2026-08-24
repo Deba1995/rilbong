@@ -20,6 +20,8 @@ import {
   Clock,
   Building2,
   Users,
+  Mail,
+  Phone,
 } from "lucide-react";
 import { getEvent } from "@/lib/events-store";
 import type { EventDef, FieldDef } from "@/lib/event-schema";
@@ -402,12 +404,13 @@ export default function EventRegisterPage() {
 
       // 1. Extract email and phone from the form values
       const customerEmail = Object.values(finalValues).find(
-        (v) => typeof v === 'string' && v.includes('@')
-      ) as string | undefined
+        (v) => typeof v === "string" && v.includes("@"),
+      ) as string | undefined;
 
       const customerPhone = Object.values(finalValues).find(
-        (v) => typeof v === 'string' && /^[0-9]{10}$/.test(v.replace(/\D/g, ''))
-      ) as string | undefined
+        (v) =>
+          typeof v === "string" && /^[0-9]{10}$/.test(v.replace(/\D/g, "")),
+      ) as string | undefined;
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
@@ -417,8 +420,8 @@ export default function EventRegisterPage() {
         description: event.title,
         order_id: orderData.orderId,
         prefill: {
-          email: customerEmail || '',
-          contact: customerPhone || '',
+          email: customerEmail || "",
+          contact: customerPhone || "",
         },
         handler: async function (response: any) {
           try {
@@ -654,6 +657,46 @@ export default function EventRegisterPage() {
                 ) : null,
               )}
             </div>
+            {/* Hosted By & Contact Card */}
+            {(event.org || event.contactEmail || event.contactPhone) && (
+              <div className="pt-6 border-t border-[#ececec]">
+                <div className="rounded-2xl bg-[#fafafa] border border-[#ececec] p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-[#9a9aa2]">
+                      Organized by
+                    </p>
+                    <p className="text-sm font-bold text-[#17171a] mt-0.5">
+                      {event.org || "Event Host"}
+                    </p>
+                    <p className="text-xs text-[#68686e] mt-0.5">
+                      Need help or have questions about this event?
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    {event.contactEmail && (
+                      <a
+                        href={`mailto:${event.contactEmail}`}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[#e2e2e5] hover:border-[#5b4fe5] hover:text-[#5b4fe5] text-xs font-semibold text-[#17171a] shadow-sm transition-all"
+                      >
+                        <Mail size={13} className="text-[#5b4fe5]" />
+                        <span>Email</span>
+                      </a>
+                    )}
+
+                    {event.contactPhone && (
+                      <a
+                        href={`tel:${event.contactPhone}`}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[#e2e2e5] hover:border-[#5b4fe5] hover:text-[#5b4fe5] text-xs font-semibold text-[#17171a] shadow-sm transition-all"
+                      >
+                        <Phone size={13} className="text-[#5b4fe5]" />
+                        <span>Call / WhatsApp</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* RIGHT: sticky ticket/registration card */}
