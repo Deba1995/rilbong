@@ -30,7 +30,7 @@ import { getTicketClaims } from "@/lib/registrations-store";
 import { supabase } from "@/lib/supabase";
 
 // ---- File upload constraints ----
-const MAX_FILE_SIZE_BYTES = 50 * 1024;
+const MAX_FILE_SIZE_BYTES = 1 * 1024 * 1024;
 const ALLOWED_FILE_TYPES = ["image/png", "image/jpeg", "image/jpg"];
 const ALLOWED_EXTENSIONS = [".png", ".jpg", ".jpeg"];
 
@@ -43,7 +43,7 @@ function validateFile(file: File): string | null {
     return "Only PNG or JPEG images are allowed.";
   }
   if (file.size > MAX_FILE_SIZE_BYTES) {
-    return `File is too large — max size is 50KB (this file is ${Math.ceil(file.size / 1024)}KB).`;
+    return `File is too large — max size is 1Mb  (this file is ${Math.ceil(file.size / 1024)}KB).`;
   }
   return null;
 }
@@ -1009,7 +1009,7 @@ export default function EventRegisterPage() {
                           </div>
                           <span className="truncate max-w-[200px]">
                             {photoPreviews[field.id]?.name ??
-                              "Upload PNG/JPEG (Max 50KB)"}
+                              "Upload PNG/JPEG (Max 1MB)"}
                           </span>
                           <input
                             type="file"
