@@ -4,7 +4,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Rilbong Sanatan Hindu Dharma Sabha',
-  description: 'Serving faith, community, and tradition in Rilbong since 1985.',
+  description: '',
   generator: 'v0.app',
   icons: {
     // This generates a crisp ॐ favicon directly in the browser using an SVG data URI
