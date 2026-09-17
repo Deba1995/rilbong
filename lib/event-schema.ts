@@ -23,6 +23,7 @@ export type TicketTier = {
 export type FieldOption = {
   id: string
   label: string
+  disabled?: boolean
 }
 
 export type FieldDef = {

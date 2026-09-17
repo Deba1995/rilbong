@@ -341,8 +341,21 @@ export default function EventRegisterPage() {
       (f) => f.filledBy === "customer",
     );
     for (const field of customerFields) {
-      if (!field.required) continue;
       const v = values[field.id];
+      if (v) {
+        const selectedValues = Array.isArray(v) ? v : [v];
+        if (
+          field.options?.some(
+            (option) =>
+              option.disabled && selectedValues.includes(option.id),
+          )
+        ) {
+          setError(`Please choose an available option for "${field.label}".`);
+          setIsSubmitting(false);
+          return;
+        }
+      }
+      if (!field.required) continue;
       const empty =
         field.type === "checkbox-group"
           ? !v || (v as string[]).length === 0
@@ -956,8 +969,8 @@ export default function EventRegisterPage() {
                       >
                         <option value="">Select…</option>
                         {field.options?.map((o) => (
-                          <option key={o.id} value={o.id}>
-                            {o.label}
+                          <option key={o.id} value={o.id} disabled={o.disabled}>
+                            {o.label}{o.disabled ? " (Unavailable)" : ""}
                           </option>
                         ))}
                       </select>
@@ -984,7 +997,7 @@ export default function EventRegisterPage() {
                             >
                               <input
                                 type={isMulti ? "checkbox" : "radio"}
-                                disabled={!isEventOpen}
+                                disabled={!isEventOpen || opt.disabled}
                                 name={field.id}
                                 checked={checked}
                                 onChange={() =>
@@ -994,7 +1007,20 @@ export default function EventRegisterPage() {
                                 }
                                 className="w-4 h-4 accent-[#5b4fe5] cursor-pointer"
                               />
-                              {opt.label}
+                              <span
+                                className={
+                                  opt.disabled
+                                    ? "text-[#9a9aa2] line-through"
+                                    : undefined
+                                }
+                              >
+                                {opt.label}
+                                {opt.disabled && (
+                                  <span className="ml-2 text-[11px] no-underline">
+                                    (Unavailable)
+                                  </span>
+                                )}
+                              </span>
                             </label>
                           );
                         })}

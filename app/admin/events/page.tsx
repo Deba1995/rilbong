@@ -43,6 +43,7 @@ import {
   newTicket,
   type EventDef,
   type FieldDef,
+  type FieldOption,
   type FieldType,
   type TicketTier,
   type EventStatus,
@@ -1055,6 +1056,27 @@ export default function AdminEventsPage() {
                                       }}
                                       className="flex-1 bg-white border border-slate-300 rounded px-2.5 py-1 text-xs outline-none focus:border-blue-500"
                                     />
+                                    <label className="flex items-center gap-1 text-[11px] text-slate-500 whitespace-nowrap cursor-pointer">
+                                      <input
+                                        type="checkbox"
+                                        checked={opt.disabled ?? false}
+                                        onChange={(e) => {
+                                          const newOpts = [
+                                            ...(field.options || []),
+                                          ];
+                                          const updatedOption: FieldOption = {
+                                            ...opt,
+                                            disabled: e.target.checked,
+                                          };
+                                          newOpts[oIdx] = updatedOption;
+                                          updateFormField(field.id, {
+                                            options: newOpts,
+                                          });
+                                        }}
+                                        className="rounded text-blue-600 cursor-pointer"
+                                      />
+                                      Disabled
+                                    </label>
                                     <button
                                       onClick={() => {
                                         const newOpts = field.options?.filter(
