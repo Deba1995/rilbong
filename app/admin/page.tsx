@@ -187,6 +187,27 @@ export default function AdminPage() {
       .filter((d) => d.value > 0);
   }, [event, confirmedRegistrations]);
 
+  const ticketPercentages = useMemo(() => {
+    const total = ticketDistribution.reduce((sum, item) => sum + item.value, 0);
+    if (total === 0) return ticketDistribution.map(() => 0);
+
+    // Work in hundredths of a percent, then distribute leftover hundredths
+    // by largest remainder so the displayed values always add up to 100.00%.
+    const scaled = ticketDistribution.map((item) => (item.value / total) * 10000);
+    const percentages = scaled.map(Math.floor);
+    let remaining = 10000 - percentages.reduce((sum, value) => sum + value, 0);
+
+    const remainderOrder = scaled
+      .map((value, index) => ({ index, remainder: value - Math.floor(value) }))
+      .sort((a, b) => b.remainder - a.remainder);
+
+    for (let i = 0; i < remaining; i++) {
+      percentages[remainderOrder[i % remainderOrder.length].index]++;
+    }
+
+    return percentages.map((value) => value / 100);
+  }, [ticketDistribution]);
+
   const statusBreakdown = useMemo(() => {
     // This one intentionally still looks at ALL filtered registrations —
     // its whole job is showing the paid/pending/failed split, so it must
@@ -484,14 +505,6 @@ export default function AdminPage() {
                         </ResponsiveContainer>
                         <div className="mt-2 space-y-1.5">
                           {ticketDistribution.map((d, i) => {
-                            const total = ticketDistribution.reduce(
-                              (s, x) => s + x.value,
-                              0,
-                            );
-                            const pct =
-                              total > 0
-                                ? Math.round((d.value / total) * 100)
-                                : 0;
                             return (
                               <div
                                 key={d.name}
@@ -508,7 +521,7 @@ export default function AdminPage() {
                                   {d.name}
                                 </span>
                                 <span className="text-[#94a3b8] font-mono">
-                                  {d.value} · {pct}%
+                                  {d.value} · {ticketPercentages[i].toFixed(2)}%
                                 </span>
                               </div>
                             );
