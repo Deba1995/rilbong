@@ -35,6 +35,7 @@ import type { EventDef } from "@/lib/event-schema";
 import type { Registration } from "@/lib/registrations-store-admin";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+import ExcelJS from "exceljs";
 
 // Brand palette — same tokens as the public registration page, so admin and public feel like one product
 const NAVY = "#1a2b4c";
@@ -238,7 +239,7 @@ export default function AdminPage() {
       .slice(-14);
   }, [confirmedRegistrations]);
 
-  const downloadCSV = () => {
+  const downloadExcel = async () => {
     if (!event) return;
 
     const headers = [
@@ -253,51 +254,109 @@ export default function AdminPage() {
       "Registration Date",
     ];
 
-    // CSV export intentionally still includes every filtered row (paid, pending,
-    // failed) — this is a full audit export, not a revenue summary, so hiding
-    // non-confirmed rows here would remove the exact records you'd need to
-    // investigate a payment discrepancy.
-    const rows = filteredRegistrations.map((r) => {
-      const ticketName =
-        event.tickets.find((t) => t.id === r.ticketId)?.name || "Unknown";
-      const fieldVals = customerFields.map((f) => {
-        const val = displayValue(r.values[f.id], event, f.id);
-        const cleanVal = String(val).replace(/"/g, '""');
-        if (f.type === "phone" || f.type === "number") return `="${cleanVal}"`;
-        return `"${cleanVal}"`;
-      });
-      // Strictly formatted to IST for CSV export
-      const date = new Date(r.createdAt).toLocaleString("en-IN", {
-        timeZone: "Asia/Kolkata",
-      });
-      return [
-        `"${r.id}"`,
-        `"${ticketName}"`,
-        ...fieldVals,
-        r.amount || 0,
-        `"${r.status || "paid"}"`,
-        `"${r.razorpayOrderId || "—"}"`,
-        `"${r.razorpayPaymentId || "—"}"`,
-        `"${r.termsAccepted ? "Yes" : "No"}"`,
-        `"${date}"`,
-      ].join(",");
-    });
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Registrations");
+    worksheet.columns = headers.map((header) => ({
+      header,
+      key: header,
+      width: 20,
+    }));
+    worksheet.getRow(1).font = { bold: true, color: { argb: "FFFFFFFF" } };
+    worksheet.getRow(1).fill = {
+      type: "pattern",
+      pattern: "solid",
+      fgColor: { argb: "FF1A2B4C" },
+    };
 
-    const csvContent = [headers.map((h) => `"${h}"`).join(","), ...rows].join(
-      "\n",
-    );
-    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const failedImages: string[] = [];
+    for (const registration of filteredRegistrations) {
+      const ticketName =
+        event.tickets.find((t) => t.id === registration.ticketId)?.name ||
+        "Unknown";
+      const rowValues: (string | number)[] = [
+        registration.id,
+        ticketName,
+      ];
+
+      for (const field of customerFields) {
+        const rawValue = registration.values[field.id];
+        const isFileUrl =
+          field.type === "file" &&
+          typeof rawValue === "string" &&
+          rawValue.startsWith("http");
+        rowValues.push(
+          isFileUrl
+            ? "Embedded image"
+            : displayValue(rawValue, event, field.id),
+        );
+      }
+
+      rowValues.push(
+        registration.amount || 0,
+        registration.status || "paid",
+        registration.razorpayOrderId || "—",
+        registration.razorpayPaymentId || "—",
+        registration.termsAccepted ? "Yes" : "No",
+        new Date(registration.createdAt).toLocaleString("en-IN", {
+          timeZone: "Asia/Kolkata",
+        }),
+      );
+
+      const row = worksheet.addRow(rowValues);
+      row.alignment = { vertical: "middle", wrapText: true };
+
+      for (let fieldIndex = 0; fieldIndex < customerFields.length; fieldIndex++) {
+        const field = customerFields[fieldIndex];
+        const rawValue = registration.values[field.id];
+        const isFileUrl =
+          field.type === "file" &&
+          typeof rawValue === "string" &&
+          rawValue.startsWith("http");
+        if (!isFileUrl) continue;
+
+        const columnIndex = 2 + fieldIndex;
+        worksheet.getColumn(columnIndex).width = 18;
+        try {
+          const response = await fetch(rawValue);
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          const imageBuffer = await response.arrayBuffer();
+          const contentType = response.headers.get("content-type") || "";
+          const extension = contentType.includes("png") ? "png" : "jpeg";
+          const imageId = workbook.addImage({
+            buffer: imageBuffer,
+            extension,
+          });
+          worksheet.addImage(imageId, {
+            tl: { col: columnIndex - 1, row: row.number - 1 },
+            ext: { width: 100, height: 75 },
+          });
+          row.height = Math.max(row.height || 15, 60);
+        } catch (error) {
+          console.error(`Failed to embed image for ${field.label}:`, error);
+          failedImages.push(`${registration.id} (${field.label})`);
+          row.getCell(columnIndex).value = "Image unavailable";
+        }
+      }
+    }
+
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute(
-      "download",
-      `${event.title.replace(/\s+/g, "_")}_Attendees.csv`,
-    );
+    link.download = `${event.title.replace(/\s+/g, "_")}_Attendees.xlsx`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
+
+    if (failedImages.length > 0) {
+      alert(
+        `The Excel file was downloaded, but ${failedImages.length} image(s) could not be embedded.`,
+      );
+    }
   };
 
   if (isLoadingEvents) {
@@ -639,11 +698,11 @@ export default function AdminPage() {
                       View Form <ExternalLink size={14} />
                     </a>
                     <button
-                      onClick={downloadCSV}
+                      onClick={downloadExcel}
                       disabled={filteredRegistrations.length === 0}
                       className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-4 py-2 text-xs font-bold text-white hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm cursor-pointer"
                     >
-                      <Download size={14} /> Download CSV
+                      <Download size={14} /> Download Excel
                     </button>
                   </div>
                 </div>
@@ -748,13 +807,15 @@ export default function AdminPage() {
                                         href={rawVal}
                                         target="_blank"
                                         rel="noreferrer"
-                                        className="inline-flex items-center gap-1.5 hover:underline font-medium text-xs px-2.5 py-1 rounded-md"
-                                        style={{
-                                          color: BLUE,
-                                          backgroundColor: "#eef4ff",
-                                        }}
+                                        className="inline-flex items-center gap-2 hover:underline font-medium text-xs"
+                                        style={{ color: BLUE }}
                                       >
-                                        <ExternalLink size={12} /> View File
+                                        <img
+                                          src={rawVal}
+                                          alt={`${f.label} preview`}
+                                          className="h-12 w-16 rounded-md border border-[#e2e8f0] object-cover"
+                                        />
+                                        View Full Image
                                       </a>
                                     ) : (
                                       textVal
