@@ -286,7 +286,7 @@ export default function AdminPage() {
           rawValue.startsWith("http");
         rowValues.push(
           isFileUrl
-            ? "Embedded image"
+            ? ""
             : displayValue(rawValue, event, field.id),
         );
       }
@@ -314,7 +314,7 @@ export default function AdminPage() {
           rawValue.startsWith("http");
         if (!isFileUrl) continue;
 
-        const columnIndex = 2 + fieldIndex;
+        const columnIndex = 3 + fieldIndex;
         worksheet.getColumn(columnIndex).width = 18;
         try {
           const response = await fetch(rawValue);
